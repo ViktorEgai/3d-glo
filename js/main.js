@@ -77,4 +77,20 @@ window.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 	openPopup();
-});
+
+	// плавная прокрутка страницы при клике на ссылки
+	function smoothScroll() {
+		const anchors = document.querySelectorAll('a[href*="#"]');
+		anchors.forEach((item) => {
+			item.addEventListener('click', (event) => {
+				event.preventDefault();
+				const blockID = item.getAttribute('href').substr(1);
+				document.getElementById(blockID).scrollIntoView({
+					behavior: 'smooth',
+					block: 'start'
+				});
+			});
+		});
+	}
+	smoothScroll();
+})
