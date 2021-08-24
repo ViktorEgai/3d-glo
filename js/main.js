@@ -50,6 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					handlerMenu();
 				}
 			}
+			if (!target.closest('.active-menu') && !target.closest('.menu')) menu.classList.remove('active-menu');
 		});
 	};
 	toggleMenu();
