@@ -8,17 +8,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		function getTimeRemaining() {
 			const dateStop = new Date(deadline).getTime(),
-					dateNow = new Date().getTime(),
-					timeRemaining = (dateStop - dateNow) / 1000;
+				dateNow = new Date().getTime(),
+				timeRemaining = (dateStop - dateNow) / 1000;
 			let seconds = Math.floor(timeRemaining % 60),
-					minutes = Math.floor((timeRemaining / 60) % 60),
-					hours = Math.floor(timeRemaining / 60 / 60);
-					if (hours < 10) hours = '0' + hours;
-					if (minutes < 10) minutes = '0' + minutes;
-					if (seconds < 10) seconds = '0' + seconds;
-			return { hours, minutes, seconds, timeRemaining };
+				minutes = Math.floor((timeRemaining / 60) % 60),
+				hours = Math.floor(timeRemaining / 60 / 60);
+			if (hours < 10) hours = '0' + hours;
+			if (minutes < 10) minutes = '0' + minutes;
+			if (seconds < 10) seconds = '0' + seconds;
+			return {
+				hours,
+				minutes,
+				seconds,
+				timeRemaining
+			};
 		}
-		function uploadTime() {	
+
+		function uploadTime() {
 			if (getTimeRemaining().timeRemaining > 0) {
 				timerHours.textContent = getTimeRemaining().hours;
 				timerMinutes.textContent = getTimeRemaining().minutes;
@@ -30,12 +36,12 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 		}
 		setInterval(uploadTime, 1000);
-	}; 
+	};
 	countTimer('30 aug 2021');
 
 	// открытие меню
 	const toggleMenu = () => {
-		const	menu = document.querySelector('menu');
+		const menu = document.querySelector('menu');
 
 		function handlerMenu() {
 			menu.classList.toggle('active-menu');
@@ -56,7 +62,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	toggleMenu();
 
 	// открытие popup окна
-	const openPopup = ()=> {
+	const openPopup = () => {
 		const popupBtn = document.querySelectorAll('.popup-btn'),
 			popup = document.querySelector('.popup'),
 			popupClose = document.querySelector('.popup-close'),
@@ -92,21 +98,21 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	openPopup();
 
-// плавная прокрутка страницы при клике на ссылки
+	// плавная прокрутка страницы при клике на ссылки
 	const smoothScroll = () => {
 		const menu = document.querySelector('menu');
 		const anchors = menu.querySelectorAll('a[href*="#"]');
 		anchors.forEach((item) => {
-			if (item.attributes.href.textContent !== '#close')  {
+			if (item.attributes.href.textContent !== '#close') {
 				item.addEventListener('click', (event) => {
-				event.preventDefault();
-				const blockID = item.getAttribute('href').substr(1);
-				document.getElementById(blockID).scrollIntoView({
-					behavior: 'smooth',
-					block: 'start'
+					event.preventDefault();
+					const blockID = item.getAttribute('href').substr(1);
+					document.getElementById(blockID).scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
 				});
-				});
-			}			
+			}
 		});
 	};
 	smoothScroll();
@@ -118,7 +124,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			tabContent = document.querySelectorAll('.service-tab');
 		// навешивание классов после клика по табам
 		const toggleTabContent = (index) => {
-			for(let i = 0; i < tabContent.length; i++) {
+			for (let i = 0; i < tabContent.length; i++) {
 				if (index === i) {
 					tab[i].classList.add('active');
 					tabContent[i].classList.remove('d-none');
@@ -131,12 +137,12 @@ window.addEventListener('DOMContentLoaded', () => {
 		// клики по табам
 		tabHeader.addEventListener('click', (event) => {
 			let target = event.target;
-				target = target.closest('.service-header-tab');
-				if(target) {
-					tab.forEach((item, i) => {
-						if (item === target) toggleTabContent(i);
-					});
-				}
+			target = target.closest('.service-header-tab');
+			if (target) {
+				tab.forEach((item, i) => {
+					if (item === target) toggleTabContent(i);
+				});
+			}
 		});
 	};
 	tabs();
@@ -148,13 +154,15 @@ window.addEventListener('DOMContentLoaded', () => {
 			ulDots = document.querySelector('.portfolio-dots'),
 			slider = document.querySelector('.portfolio-content');
 
-		let currentSlide = 0, interval;
+		let currentSlide = 0,
+			interval;
 
 		// Добавление точек на страницу
 		const dots = () => {
 			for (let i = 0; i < slide.length; i++) {
 				const li = document.createElement('li');
 				li.classList.add('dot');
+				if (i === 0) li.classList.add('dot-active');
 				ulDots.appendChild(li);
 			}
 		};
@@ -169,7 +177,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			elem[index].classList.add(strClass);
 		};
 
-	
+
 		const autoPlaySlide = () => {
 			prevSlide(slide, currentSlide, 'portfolio-item-active');
 			prevSlide(dot, currentSlide, 'dot-active');
@@ -208,7 +216,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				})
 			}
 			if (currentSlide >= slide.length) currentSlide = 0;
-			if (currentSlide < 0 ) currentSlide = slide.length - 1;
+			if (currentSlide < 0) currentSlide = slide.length - 1;
 
 			nextSlide(slide, currentSlide, 'portfolio-item-active');
 			nextSlide(dot, currentSlide, 'dot-active');
@@ -218,17 +226,78 @@ window.addEventListener('DOMContentLoaded', () => {
 		// наведение мыши на кнопки
 		slider.addEventListener('mouseover', (event) => {
 			if (event.target.matches('.portfolio-btn') ||
-			event.target.matches('.dot')) {
+				event.target.matches('.dot')) {
 				stopSlide();
 			}
 		});
 		slider.addEventListener('mouseout', (event) => {
 			if (event.target.matches('.portfolio-btn') ||
-			event.target.matches('.dot')) {
+				event.target.matches('.dot')) {
 				startSlide(1000);
 			}
 		});
-		startSlide(1000);
+		startSlide();
 	};
 	slider();
+
+	// блок с фотками "наша команда" изменение фото при наведении
+	const changePhoto = () => {
+		const photos = document.querySelectorAll('.command__photo');
+		photos.forEach((item, index) => {
+			item.addEventListener('mouseenter', () => {
+				item.setAttribute('src', item.dataset.img);
+			});
+			item.addEventListener('mouseleave', () => {
+				item.setAttribute('src', `images/command/command-${index + 1}.jpg`);
+			});
+		});
+	};
+	changePhoto();
+
+	// валидация инпутов
+	const validate = () => {
+		// валидация калькулятора
+		const calcItems = document.querySelectorAll('input.calc-item');
+		calcItems.forEach((item) => {
+			item.addEventListener('input', () => {
+				item.value = item.value.replace(/\D/g, '');
+			});
+		});
+
+		// валидация формы
+		const forms = document.querySelectorAll('form');
+		forms.forEach((item, i) => {
+			item.addEventListener('input', (e) => {
+				let target = e.target;
+				if (target.id === `form${i+1}-name` || target.id === `form${i+1}-message`) {
+					target.value = target.value.replace(/[\d\w^^\^~`!@#\$%^*_+\[\]{}\\:;?|>'\/<=&()№"]+$/gi, '');
+				}
+				if (target.id === `form${i+1}-email`) {
+					target.value = target.value.replace(/[\а-яА-Я0-9^^\^`#\$%^+\[\]{}\\:;?|>\/<=&()№"]/g, '');
+				}
+				if (target.id === `form${i+1}-phone`) {
+					target.value = target.value.replace(/[а-яa-z^^\^~`!@#\$%^*_\[\]{}\\:;?|>'\/<=&№"]+$/gi, '');
+				}
+			});
+		});
+		
+		// инпут с именем с большой буквы
+		const formName = document.querySelectorAll('input[name="user_name"]');
+		formName.forEach(item=> {		
+			item.addEventListener('blur', () => {
+				let words = item.value.split(' ');
+				if (words.length > 1) {
+					item.value = '';
+					words.forEach(word => {
+						word = word[0].toUpperCase() + word.slice(1) + ' ';
+						item.value +=  word;
+						console.log(item.value);
+					});
+				} else {
+					return;
+				}
+			});	
+		});
+	};
+	validate();
 })
