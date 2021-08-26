@@ -280,23 +280,22 @@ window.addEventListener('DOMContentLoaded', () => {
 				}
 			});
 		});
-		
-		// инпут с именем с большой буквы
-		const formName = document.querySelectorAll('input[name="user_name"]');
-		formName.forEach(item=> {		
+
+		// событие blur для всех инпутов
+		const inputs = document.querySelectorAll('input');
+		inputs.forEach((item) => {
 			item.addEventListener('blur', () => {
-				let words = item.value.split(' ');
-				if (words.length > 1) {
-					item.value = '';
-					words.forEach(word => {
-						word = word[0].toUpperCase() + word.slice(1) + ' ';
-						item.value +=  word;
-						console.log(item.value);
-					});
+				item.value = item.value.replace(/\s+/g, ' ');
+				item.value = item.value.replace(/^\s+|\s+$/g, '');
+				if (item.value.match(/^-+|-+$/)) {
+					item.value = item.value.replace(/^-+|-+$/g, '');
+					if (item.value.match(/^\s+|\s+$/)) {
+						item.value = item.value.replace(/^\s+|\s+$/g, '');
+					}
 				} else {
-					return;
+					item.value = item.value.replace(/-+/g, '-');
 				}
-			});	
+			});
 		});
 	};
 	validate();
