@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 window.addEventListener('DOMContentLoaded', () => {
 	// Таймер
-	const countTimer = (deadline) => {
+	const countTimer = deadline => {
 		const timerHours = document.querySelector('#timer-hours'),
 			timerMinutes = document.querySelector('#timer-minutes'),
 			timerSeconds = document.querySelector('#timer-seconds');
@@ -48,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 
 		document.addEventListener('click', event => {
-			let target = event.target;
+			const target = event.target;
 			if (target.closest('.menu')) handlerMenu();
 			if (target.closest('.close-btn')) handlerMenu();
 			if (target.closest('a[href*="#"]')) {
@@ -82,7 +82,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 		// закрытие попап
-		popup.addEventListener('click', (event) => {
+		popup.addEventListener('click', event => {
 			let target = event.target;
 			if (target.classList.contains('popup-close')) {
 				popup.style.display = 'none';
@@ -102,9 +102,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	const smoothScroll = () => {
 		const menu = document.querySelector('menu');
 		const anchors = menu.querySelectorAll('a[href*="#"]');
-		anchors.forEach((item) => {
+		anchors.forEach(item => {
 			if (item.attributes.href.textContent !== '#close') {
-				item.addEventListener('click', (event) => {
+				item.addEventListener('click', event => {
 					event.preventDefault();
 					const blockID = item.getAttribute('href').substr(1);
 					document.getElementById(blockID).scrollIntoView({
@@ -123,7 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			tab = tabHeader.querySelectorAll('.service-header-tab'),
 			tabContent = document.querySelectorAll('.service-tab');
 		// навешивание классов после клика по табам
-		const toggleTabContent = (index) => {
+		const toggleTabContent = index => {
 			for (let i = 0; i < tabContent.length; i++) {
 				if (index === i) {
 					tab[i].classList.add('active');
@@ -135,7 +135,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 		};
 		// клики по табам
-		tabHeader.addEventListener('click', (event) => {
+		tabHeader.addEventListener('click', event => {
 			let target = event.target;
 			target = target.closest('.service-header-tab');
 			if (target) {
@@ -147,7 +147,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	tabs();
 
-	// слайдер 
+	// слайдер
 	const slider = () => {
 		const slide = document.querySelectorAll('.portfolio-item'),
 			btn = document.querySelectorAll('.portfolio-btn'),
@@ -197,7 +197,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		slider.addEventListener('click', event => {
 			event.preventDefault();
 
-			let target = event.target;
+			const target = event.target;
 
 			if (!target.matches('.portfolio-btn, .dot')) return;
 
@@ -213,7 +213,7 @@ window.addEventListener('DOMContentLoaded', () => {
 					if (elem === target) {
 						currentSlide = index;
 					}
-				})
+				});
 			}
 			if (currentSlide >= slide.length) currentSlide = 0;
 			if (currentSlide < 0) currentSlide = slide.length - 1;
@@ -224,13 +224,13 @@ window.addEventListener('DOMContentLoaded', () => {
 		});
 
 		// наведение мыши на кнопки
-		slider.addEventListener('mouseover', (event) => {
+		slider.addEventListener('mouseover', event => {
 			if (event.target.matches('.portfolio-btn') ||
 				event.target.matches('.dot')) {
 				stopSlide();
 			}
 		});
-		slider.addEventListener('mouseout', (event) => {
+		slider.addEventListener('mouseout', event => {
 			if (event.target.matches('.portfolio-btn') ||
 				event.target.matches('.dot')) {
 				startSlide(1000);
@@ -258,7 +258,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	const validate = () => {
 		// валидация калькулятора
 		const calcItems = document.querySelectorAll('input.calc-item');
-		calcItems.forEach((item) => {
+		calcItems.forEach(item => {
 			item.addEventListener('input', () => {
 				item.value = item.value.replace(/\D/g, '');
 			});
@@ -267,15 +267,15 @@ window.addEventListener('DOMContentLoaded', () => {
 		// валидация формы
 		const forms = document.querySelectorAll('form');
 		forms.forEach((item, i) => {
-			item.addEventListener('input', (e) => {
-				let target = e.target;
-				if (target.id === `form${i+1}-name` || target.id === `form${i+1}-message`) {
+			item.addEventListener('input', e => {
+				const target = e.target;
+				if (target.id === `form${i + 1}-name` || target.id === `form${i + 1}-message`) {
 					target.value = target.value.replace(/[\d\w^^\^~`!@#\$%^*_+\[\]{}\\:;?|>'\/<=&()№"]+$/gi, '');
 				}
-				if (target.id === `form${i+1}-email`) {
+				if (target.id === `form${i + 1}-email`) {
 					target.value = target.value.replace(/[\а-яА-Я0-9^^\^`#\$%^+\[\]{}\\:;?|>\/<=&()№"]/g, '');
 				}
-				if (target.id === `form${i+1}-phone`) {
+				if (target.id === `form${i + 1}-phone`) {
 					target.value = target.value.replace(/[а-яa-z^^\^~`!@#\$%^*_\[\]{}\\:;?|>'\/<=&№"]+$/gi, '');
 				}
 			});
@@ -283,7 +283,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		// событие blur для всех инпутов
 		const inputs = document.querySelectorAll('input');
-		inputs.forEach((item) => {
+		inputs.forEach(item => {
 			item.addEventListener('blur', () => {
 				item.value = item.value.replace(/\s+/g, ' ');
 				item.value = item.value.replace(/^\s+|\s+$/g, '');
@@ -299,4 +299,64 @@ window.addEventListener('DOMContentLoaded', () => {
 		});
 	};
 	validate();
-})
+
+	// калькулятор
+	const calc = (price = 100) => {
+		const calcBlock = document.querySelector('.calc-block'),
+			calcType = document.querySelector('.calc-type'),
+			calcSquare = document.querySelector('.calc-square'),
+			calcDay = document.querySelector('.calc-day'),
+			calcCount = document.querySelector('.calc-count'),
+			totalValue = document.getElementById('total');
+
+		const countSum = () => {
+			let total = 0,
+			countValue = 1,
+			dayValue = 1, 
+			counter = 0;
+
+			const typeValue = calcType.options[calcType.selectedIndex].value,
+				squareValue = +calcSquare.value;
+
+			if(calcCount.value > 1) {
+				countValue += (calcCount.value - 1) / 10;
+			}
+
+			if (calcDay.value && calcDay.value < 5) {
+				dayValue *= 2;
+			} else if (calcDay.value && calcDay.value < 10) {
+				dayValue *= 1.5;
+			}
+
+			if (typeValue && squareValue) {
+				total = price * typeValue * squareValue * countValue * dayValue;
+			}
+
+			// анимация результата
+			const calcAnimation = () => {
+				requestAnimationFrame(calcAnimation);
+				if (counter < total) {
+					if (typeValue && squareValue ) {
+						counter += 100;
+						if (counter > total) {
+								totalValue.textContent = Math.floor(counter - (counter - total));
+						} else {
+							totalValue.textContent = counter;
+						}
+					}
+				}
+			};
+			calcAnimation();
+		};
+
+		calcBlock.addEventListener('change', event => {
+			const target = event.target;
+
+			if (target.matches('.calc-type') || target.matches('.calc-square') ||
+			target.matches('.calc-day') || target.matches('.calc-count')) {
+				countSum();
+			}
+		});
+	};
+	calc(100);
+});
