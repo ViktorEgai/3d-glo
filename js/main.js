@@ -285,6 +285,23 @@ window.addEventListener('DOMContentLoaded', () => {
 		const inputs = document.querySelectorAll('input');
 		inputs.forEach(item => {
 			item.addEventListener('blur', () => {
+				if (item.getAttribute('name') === 'user_name') {
+					const words = item.value.split(' ');
+					let newWord = '';
+					if (words.length > 1) {
+						words.forEach((word, i) => {
+							if (i < words.length) {
+								word = word[0].toUpperCase() + word.slice(1) + ' ';
+							} else {
+								word = word[0].toUpperCase() + word.slice(1);
+							}
+							newWord += word;
+						});
+						item.value = newWord;
+					} else {
+						item.value = item.value[0].toUpperCase() + item.value.slice(1);
+					}
+				}
 				item.value = item.value.replace(/\s+/g, ' ');
 				item.value = item.value.replace(/^\s+|\s+$/g, '');
 				if (item.value.match(/^-+|-+$/)) {
@@ -311,14 +328,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		const countSum = () => {
 			let total = 0,
-			countValue = 1,
-			dayValue = 1, 
-			counter = 0;
+				countValue = 1,
+				dayValue = 1,
+				counter = 0;
 
 			const typeValue = calcType.options[calcType.selectedIndex].value,
-				squareValue = +calcSquare.value;
+				squareValue = calcSquare.value;
 
-			if(calcCount.value > 1) {
+			if (calcCount.value > 1) {
 				countValue += (calcCount.value - 1) / 10;
 			}
 
@@ -329,31 +346,37 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 
 			if (typeValue && squareValue) {
-				total = price * typeValue * squareValue * countValue * dayValue;
+				total = price * typeValue * +squareValue * countValue * dayValue;
 			}
 
 			// анимация результата
-			const calcAnimation = () => {
-				requestAnimationFrame(calcAnimation);
+			const calcAnimation = () => {	
 				if (counter < total) {
-					if (typeValue && squareValue ) {
-						counter += 100;
-						if (counter > total) {
-								totalValue.textContent = Math.floor(counter - (counter - total));
-						} else {
-							totalValue.textContent = counter;
-						}
+					counter += 100;
+					requestAnimationFrame(calcAnimation);
+					console.log(counter, total);
+					totalValue.textContent = counter;
+					if (counter > total) {
+							totalValue.textContent = Math.floor(counter - (counter - total));
 					}
-				}
-			};
-			calcAnimation();
+					}
+				};
+			requestAnimationFrame(calcAnimation);
+				//остановка анимации
+			if (typeValue.length === 0 || squareValue.length === 0) {
+				console.log('typeValue.length: ', typeValue.length);
+				console.log('squareValue.length: ', squareValue.length);
+				totalValue.textContent = 0;
+				cancelAnimationFrame(calcAnimation);
+			} else {
+				requestAnimationFrame(calcAnimation);
+			}
 		};
 
 		calcBlock.addEventListener('change', event => {
 			const target = event.target;
-
 			if (target.matches('.calc-type') || target.matches('.calc-square') ||
-			target.matches('.calc-day') || target.matches('.calc-count')) {
+				target.matches('.calc-day') || target.matches('.calc-count')) {
 				countSum();
 			}
 		});
