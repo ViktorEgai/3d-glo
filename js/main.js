@@ -350,10 +350,11 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 
 			// анимация результата
-			const calcAnimation = () => {	
+			let animate;
+			const calcAnimation = () => {
 				if (counter < total) {
-					counter += 100;
-					requestAnimationFrame(calcAnimation);
+					counter +=  Math.ceil(total /10);
+					animate = requestAnimationFrame(calcAnimation);
 					console.log(counter, total);
 					totalValue.textContent = counter;
 					if (counter > total) {
@@ -361,15 +362,13 @@ window.addEventListener('DOMContentLoaded', () => {
 					}
 					}
 				};
-			requestAnimationFrame(calcAnimation);
-				//остановка анимации
+
+			//остановка анимации
 			if (typeValue.length === 0 || squareValue.length === 0) {
-				console.log('typeValue.length: ', typeValue.length);
-				console.log('squareValue.length: ', squareValue.length);
 				totalValue.textContent = 0;
-				cancelAnimationFrame(calcAnimation);
+				cancelAnimationFrame(animate);
 			} else {
-				requestAnimationFrame(calcAnimation);
+				animate = requestAnimationFrame(calcAnimation);
 			}
 		};
 
@@ -382,4 +381,5 @@ window.addEventListener('DOMContentLoaded', () => {
 		});
 	};
 	calc(100);
+
 });
