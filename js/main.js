@@ -364,10 +364,10 @@ window.addEventListener('DOMContentLoaded', () => {
 				};
 
 			//остановка анимации
-			if (typeValue.length === 0 || squareValue.length === 0) {
+			if (typeValue.length === 0 || squareValue.length === 0 || squareValue === '0') {
 				totalValue.textContent = 0;
 				cancelAnimationFrame(animate);
-			} else {
+			} else {			
 				animate = requestAnimationFrame(calcAnimation);
 			}
 		};
