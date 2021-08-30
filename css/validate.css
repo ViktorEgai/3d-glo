@@ -1,0 +1,27 @@
+.error {
+  color: #e72727;
+  font-size: 14px;
+}
+.error-input {
+  color: #e72727 !important;
+  background-color: #f5bbbb;
+  
+}
+#form1 .error {
+  transform: translateY(-3rem);
+}
+#form3 input {
+  position: relative;
+}
+#form3 .error {
+  font-size: 12px;
+  position: absolute;  
+  left: 50%;
+  transform: translateX(-50%);
+} 
+
+@media (max-width: 991px) {
+  #form1 .error {
+    transform: translateY(0);
+  }
+}

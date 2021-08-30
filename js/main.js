@@ -65,7 +65,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	const openPopup = () => {
 		const popupBtn = document.querySelectorAll('.popup-btn'),
 			popup = document.querySelector('.popup'),
-			popupClose = document.querySelector('.popup-close'),
 			popupContent = document.querySelector('.popup-content');
 		let count = -300;
 
@@ -254,9 +253,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	changePhoto();
 
-	// валидация инпутов
-	const validate = () => {
-		// валидация калькулятора
+	// запрет ввода инпутов
+	const disableInput = () => {
+		// запрет ввода букв в калькуляторе
 		const calcItems = document.querySelectorAll('input.calc-item');
 		calcItems.forEach(item => {
 			item.addEventListener('input', () => {
@@ -264,13 +263,16 @@ window.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 
-		// валидация формы
+		// запрет на ввод символов
 		const forms = document.querySelectorAll('form');
 		forms.forEach((item, i) => {
 			item.addEventListener('input', e => {
 				const target = e.target;
-				if (target.id === `form${i + 1}-name` || target.id === `form${i + 1}-message`) {
+				if (target.id === `form${i + 1}-name`) {
 					target.value = target.value.replace(/[\d\w^^\^~`!@#\$%^*_+\[\]{}\\:;?|>'\/<=&()№"]+$/gi, '');
+				}
+				if (target.id === `form${i + 1}-message`) {
+					target.value = target.value.replace(/[a-z\^~`@#\$%^*_+\[\]{}\\|>'\/<=&()]+$/gi, '');
 				}
 				if (target.id === `form${i + 1}-email`) {
 					target.value = target.value.replace(/[\а-яА-Я0-9^^\^`#\$%^+\[\]{}\\:;?|>\/<=&()№"]/g, '');
@@ -286,20 +288,25 @@ window.addEventListener('DOMContentLoaded', () => {
 		inputs.forEach(item => {
 			item.addEventListener('blur', () => {
 				if (item.getAttribute('name') === 'user_name') {
-					const words = item.value.split(' ');
-					let newWord = '';
-					if (words.length > 1) {
-						words.forEach((word, i) => {
-							if (i < words.length) {
-								word = word[0].toUpperCase() + word.slice(1) + ' ';
-							} else {
-								word = word[0].toUpperCase() + word.slice(1);
-							}
-							newWord += word;
-						});
-						item.value = newWord;
+					if (item.value) {
+						item.value = item.value.replace(/^\s+|\s+$/g, '');
+						const words = item.value.split(' ');
+						let newWord = '';
+						if (words.length > 1) {
+							words.forEach((word, i) => {
+								if (i < words.length) {
+									word = word[0].toUpperCase() + word.slice(1) + ' ';
+								} else {
+									word = word[0].toUpperCase() + word.slice(1);
+								}
+								newWord += word;
+							});
+							item.value = newWord;
+						} else {
+							item.value = item.value[0].toUpperCase() + item.value.slice(1);
+						}
 					} else {
-						item.value = item.value[0].toUpperCase() + item.value.slice(1);
+						return
 					}
 				}
 				item.value = item.value.replace(/\s+/g, ' ');
@@ -315,7 +322,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 	};
-	validate();
+	disableInput();
 
 	// калькулятор
 	const calc = (price = 100) => {
@@ -353,21 +360,20 @@ window.addEventListener('DOMContentLoaded', () => {
 			let animate;
 			const calcAnimation = () => {
 				if (counter < total) {
-					counter +=  Math.ceil(total /10);
+					counter += Math.ceil(total / 10);
 					animate = requestAnimationFrame(calcAnimation);
-					console.log(counter, total);
 					totalValue.textContent = counter;
 					if (counter > total) {
-							totalValue.textContent = Math.floor(counter - (counter - total));
+						totalValue.textContent = Math.floor(counter - (counter - total));
 					}
-					}
-				};
+				}
+			};
 
 			//остановка анимации
 			if (typeValue.length === 0 || squareValue.length === 0 || squareValue === '0') {
 				totalValue.textContent = 0;
 				cancelAnimationFrame(animate);
-			} else {			
+			} else {
 				animate = requestAnimationFrame(calcAnimation);
 			}
 		};
@@ -382,4 +388,150 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	calc(100);
 
+	//  валидатор на количество символов в input'ах
+	const validate = () => {
+		const forms = document.querySelectorAll('form');
+
+		forms.forEach((form) => {
+			// событие change для input 		
+			[...form.elements].forEach(elem => {
+				// блокировка кнопки
+				if (elem.tagName.toLowerCase() === 'button') {
+					let btn = elem;
+					btn.disabled = true;
+				}
+
+				// создание дива для ошибок
+				const errorMsg = document.createElement('div');
+				errorMsg.classList.add('error');
+				elem.insertAdjacentElement('afterend', errorMsg);
+
+				// обработчик change
+				elem.addEventListener('change', () => {
+				const btn = form.querySelector('.btn');
+				// валидация поля "Имя"
+					if (elem.getAttribute('name') === 'user_name') {
+						if (elem.value) {
+							if (elem.value.length < 3 || elem.value.length > 10) {
+								elem.classList.add('error-input');
+								errorMsg.textContent = 'Введите от 3 до 10 букв';
+								btn.disabled = true;
+							} else {
+								elem.classList.remove('error-input');
+								errorMsg.textContent = '';
+								btn.disabled = false;
+							}
+						} else {
+							elem.classList.remove('error-input');
+							errorMsg.textContent = '';
+							btn.disabled = true;
+						}
+					}
+					// валидация номера телефона
+					if (elem.getAttribute('name') === 'user_phone') {
+						if (elem.value) {
+							if (elem.value.slice(0, 2) !== '+7' ||
+								elem.value.length < 12 ||
+								elem.value.length > 12) {
+								elem.classList.add('error-input');
+								errorMsg.textContent = 'Номер должен быть в формате +7XXXXXXX';
+								btn.disabled = true;
+							} else {
+								elem.classList.remove('error-input');
+								errorMsg.textContent = '';
+								btn.disabled = false;
+							}
+						} else {
+							elem.classList.remove('error-input');
+							errorMsg.textContent = '';
+							btn.disabled = true;
+						}
+					}
+					// валидация сообщения
+					if (elem.getAttribute('name') === 'user_message') {
+						if (elem.value) {
+							if (elem.value.length < 15) {
+								elem.classList.add('error-input');
+								errorMsg.textContent = 'Сообщение должно содержать не менее 15 символов';
+								btn.disabled = true;
+							} else {
+								elem.classList.remove('error-input');
+								errorMsg.textContent = '';
+								btn.disabled = false;
+							}
+						} else {
+							elem.classList.remove('error-input');
+							errorMsg.textContent = '';
+							btn.disabled = true;
+						}
+					}
+				});
+			});
+		});
+	};
+	validate();
+
+	// send-ajx-form
+	const sendForm = () => {
+		const errorMessage = 'Что-то пошло не так...',
+			loadMessage = 'Загрузка...',
+			successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+		const forms = document.querySelectorAll('form');
+
+		const statusMessage = document.createElement('div');
+		statusMessage.style.cssText = 'font-size: 2rem;';
+		// обработчик для всех форм
+		forms.forEach((form) => {
+			// событие сабмит
+			form.addEventListener('submit', (event) => {
+				event.preventDefault();
+				form.appendChild(statusMessage);
+
+				const formData = new FormData(form);
+				let body = {};
+				formData.forEach((val, key) => {
+					body[key] = val;
+				});
+
+				// вызов функции postData
+				postData(body, () => {
+						statusMessage.textContent = successMessage;
+					},
+					(error) => {
+						statusMessage.textContent = errorMessage;
+						console.error(error);
+					});
+				// очистка инпутов после отправки
+				[...form].forEach((input) => {
+					input.value = '';
+				});
+			});
+			// цвет текста сообщения в popup окне
+			if (form.id === 'form3') {
+				statusMessage.style.color = '#fff';
+			}
+		});
+
+		// отправка данных на сервер
+		const postData = (body, outputData, errorData) => {
+			const request = new XMLHttpRequest();
+			request.addEventListener('readystatechange', () => {
+				statusMessage.textContent = loadMessage;
+				if (request.readyState !== 4) {
+					return;
+				}
+				if (request.status === 200) {
+					outputData();
+				} else {
+					errorData(request.status);
+				}
+			});
+			request.open('POST', './server.php');
+			request.setRequestHeader('Content-Type', 'application/json');
+
+			request.send(JSON.stringify(body));
+		};
+	};
+	sendForm();
 });
