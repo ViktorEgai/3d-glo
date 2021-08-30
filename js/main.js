@@ -393,14 +393,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		const forms = document.querySelectorAll('form');
 
 		forms.forEach((form) => {
+				// блокировка кнопки
+			form.querySelector('.btn').disabled = true;
 			// событие change для input 		
 			[...form.elements].forEach(elem => {
-				// блокировка кнопки
-				if (elem.tagName.toLowerCase() === 'button') {
-					let btn = elem;
-					btn.disabled = true;
-				}
-
 				// создание дива для ошибок
 				const errorMsg = document.createElement('div');
 				errorMsg.classList.add('error');
@@ -485,6 +481,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		forms.forEach((form) => {
 			// событие сабмит
 			form.addEventListener('submit', (event) => {
+				form.querySelector('.btn').disabled = true;
 				event.preventDefault();
 				form.appendChild(statusMessage);
 
@@ -513,11 +510,62 @@ window.addEventListener('DOMContentLoaded', () => {
 			}
 		});
 
+		// стили для анимации 
+		const animStyle = () => {
+					const style = document.createElement('style');
+		style.textContent = `
+.sk-double-bounce {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  margin: auto;  
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%)
+  
+}
+.sk-child {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #19b5fe;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: sk-double-bounce 2s infinite ease-in-out;
+  }
+
+  .sk-double-bounce-2 {
+    animation-delay: -1s;
+  }
+@keyframes sk-double-bounce {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+		`;
+		document.head.appendChild(style);
+
+		};
+
 		// отправка данных на сервер
 		const postData = (body, outputData, errorData) => {
 			const request = new XMLHttpRequest();
 			request.addEventListener('readystatechange', () => {
-				statusMessage.textContent = loadMessage;
+				// statusMessage.textContent = loadMessage;
+				statusMessage.innerHTML = `
+	<div class='sk-double-bounce'>
+		<div class='sk-child sk-double-bounce-1'></div>
+		<div class='sk-child sk-double-bounce-2'></div>
+	</div>
+				`;
+				animStyle();
 				if (request.readyState !== 4) {
 					return;
 				}
