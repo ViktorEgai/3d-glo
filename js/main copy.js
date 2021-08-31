@@ -491,9 +491,10 @@ window.addEventListener('DOMContentLoaded', () => {
 				});
 
 				// вызов функции postData
-				postData(body)
-					.then(() => statusMessage.textContent = successMessage)
-					.catch((error)=> {
+				postData(body, () => {
+						statusMessage.textContent = successMessage;
+					},
+					(error) => {
 						statusMessage.textContent = errorMessage;
 						console.error(error);
 					});
@@ -553,9 +554,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		};
 
 		// отправка данных на сервер
-		const postData = (body) => {
-			return new Promise((resolve, reject) => {
-				const request = new XMLHttpRequest();
+		const postData = (body, outputData, errorData) => {
+			const request = new XMLHttpRequest();
 			request.addEventListener('readystatechange', () => {
 				// statusMessage.textContent = loadMessage;
 				statusMessage.innerHTML = `
@@ -569,16 +569,15 @@ window.addEventListener('DOMContentLoaded', () => {
 					return;
 				}
 				if (request.status === 200) {
-					resolve();
+					outputData();
 				} else {
-					reject(request.status);
+					errorData(request.status);
 				}
 			});
 			request.open('POST', './server.php');
 			request.setRequestHeader('Content-Type', 'application/json');
 
 			request.send(JSON.stringify(body));
-			});
 		};
 	};
 	sendForm();
