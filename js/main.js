@@ -393,7 +393,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		const forms = document.querySelectorAll('form');
 
 		forms.forEach((form) => {
-				// блокировка кнопки
+			// блокировка кнопки
 			form.querySelector('.btn').disabled = true;
 			// событие change для input 		
 			[...form.elements].forEach(elem => {
@@ -404,8 +404,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 				// обработчик change
 				elem.addEventListener('change', () => {
-				const btn = form.querySelector('.btn');
-				// валидация поля "Имя"
+					const btn = form.querySelector('.btn');
+					// валидация поля "Имя"
 					if (elem.getAttribute('name') === 'user_name') {
 						if (elem.value) {
 							if (elem.value.length < 3 || elem.value.length > 10) {
@@ -470,7 +470,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	// send-ajx-form
 	const sendForm = () => {
 		const errorMessage = 'Что-то пошло не так...',
-			loadMessage = 'Загрузка...',
 			successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
 
 		const forms = document.querySelectorAll('form');
@@ -481,6 +480,13 @@ window.addEventListener('DOMContentLoaded', () => {
 		forms.forEach((form) => {
 			// событие сабмит
 			form.addEventListener('submit', (event) => {
+				statusMessage.innerHTML = `
+	<div class='sk-double-bounce'>
+		<div class='sk-child sk-double-bounce-1'></div>
+		<div class='sk-child sk-double-bounce-2'></div>
+	</div>
+				`;
+				animStyle();
 				form.querySelector('.btn').disabled = true;
 				event.preventDefault();
 				form.appendChild(statusMessage);
@@ -492,9 +498,30 @@ window.addEventListener('DOMContentLoaded', () => {
 
 				// вызов функции postData
 				postData(body)
-					.then(() => statusMessage.textContent = successMessage)
-					.catch((error)=> {
+					.then((response) => {
+						if (response.status !== 200) {
+							throw new Error('status network not 200')
+						}
+						if(form.id === 'form3') {
+							setTimeout(()=>{
+								document.querySelector('.popup').style.display = 'none';
+							}, 3000);
+						}
+						statusMessage.textContent = successMessage;
+						setTimeout(() => {
+							statusMessage.textContent = '';
+						}, 3000)
+					})
+					.catch((error) => {
 						statusMessage.textContent = errorMessage;
+						if(form.id === 'form3') {
+							setTimeout(()=>{
+								document.querySelector('.popup').style.display = 'none';
+							}, 3000);
+						}
+						setTimeout(() => {
+							statusMessage.textContent = '';
+						}, 3000)
 						console.error(error);
 					});
 				// очистка инпутов после отправки
@@ -510,8 +537,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		// стили для анимации 
 		const animStyle = () => {
-					const style = document.createElement('style');
-		style.textContent = `
+			const style = document.createElement('style');
+			style.textContent = `
 .sk-double-bounce {
   width: 50px;
   height: 50px;
@@ -546,38 +573,19 @@ window.addEventListener('DOMContentLoaded', () => {
     transform: scale(1);
   }
 }
-
 		`;
-		document.head.appendChild(style);
+			document.head.appendChild(style);
 
 		};
 
 		// отправка данных на сервер
 		const postData = (body) => {
-			return new Promise((resolve, reject) => {
-				const request = new XMLHttpRequest();
-			request.addEventListener('readystatechange', () => {
-				// statusMessage.textContent = loadMessage;
-				statusMessage.innerHTML = `
-	<div class='sk-double-bounce'>
-		<div class='sk-child sk-double-bounce-1'></div>
-		<div class='sk-child sk-double-bounce-2'></div>
-	</div>
-				`;
-				animStyle();
-				if (request.readyState !== 4) {
-					return;
-				}
-				if (request.status === 200) {
-					resolve();
-				} else {
-					reject(request.status);
-				}
-			});
-			request.open('POST', './server.php');
-			request.setRequestHeader('Content-Type', 'application/json');
-
-			request.send(JSON.stringify(body));
+			return fetch('./server.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(body)
 			});
 		};
 	};
