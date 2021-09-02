@@ -32,6 +32,7 @@ const countTimer = deadline => {
 				timerSeconds.textContent = '00';
 			}
 		}
+		uploadTime()
 		setInterval(uploadTime, 1000);
 	};
 

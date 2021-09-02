@@ -19,4 +19,9 @@
   left: 7rem;
  
 } 
+@media  (max-width: 991px){
+  #form1 .error {
+    transform: translateY(0);
+  }
+}
 
