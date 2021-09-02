@@ -16,12 +16,7 @@
 #form3 .error {
   font-size: 12px;
   position: absolute;  
-  left: 50%;
-  transform: translateX(-50%);
+  left: 7rem;
+ 
 } 
 
-@media (max-width: 991px) {
-  #form1 .error {
-    transform: translateY(0);
-  }
-}

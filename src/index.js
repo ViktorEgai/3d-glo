@@ -11,7 +11,7 @@ import validate from './modules/validate';
 import sendForm from './modules/sendForm';
 
 // Таймер
-countTimer('30 aug 2021');
+countTimer('9 sen 2021');
 // открытие меню
 toggleMenu();
 // открытие popup окна

@@ -3,7 +3,6 @@ const openPopup = () => {
 			popup = document.querySelector('.popup'),
 			popupContent = document.querySelector('.popup-content');
 		let count = -300;
-
 		popupBtn.forEach(btn => {
 			btn.addEventListener('click', () => {
 				popup.style.display = 'block';
@@ -22,11 +21,23 @@ const openPopup = () => {
 			if (target.classList.contains('popup-close')) {
 				popup.style.display = 'none';
 				count = -300;
+				// очистка инпутов при закрытиые попап
+				popupContent.querySelectorAll('input').forEach(item => {
+					item.value = '';
+					if (item.classList.contains('error-input')) item.classList.remove('error-input');
+					if (item.nextElementSibling) item.nextElementSibling.remove();
+				});
 			} else {
 				target = target.closest('.popup-content');
 				if (!target) {
 					popup.style.display = 'none';
 					count = -300;
+					// очистка инпутов при закрытиые попап
+					popupContent.querySelectorAll('input').forEach(item => {
+						item.value = '';
+						if (item.classList.contains('error-input')) item.classList.remove('error-input');
+						if (item.nextElementSibling) item.nextElementSibling.remove();
+					});
 				}
 			}
 		});
