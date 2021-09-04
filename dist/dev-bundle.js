@@ -126,7 +126,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar smoothScroll = function smoothScroll() {\n  var menu = document.querySelector('menu');\n  var anchors = menu.querySelectorAll('a[href*=\"#\"]');\n  anchors.forEach(function (item) {\n    if (item.attributes.href.textContent !== '#close') {\n      item.addEventListener('click', function (event) {\n        event.preventDefault();\n        var blockID = item.getAttribute('href').substr(1);\n        document.getElementById(blockID).scrollIntoView({\n          behavior: 'smooth',\n          block: 'start'\n        });\n      });\n    }\n  });\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (smoothScroll);\n\n//# sourceURL=webpack://3D_Glo/./src/modules/smoothScroll.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar smoothScroll = function smoothScroll() {\n  var menu = document.querySelector('menu');\n  var anchors = menu.querySelectorAll('a[href*=\"#\"]');\n  anchors.forEach(function (item) {\n    if (item.attributes.href.textContent !== '#close') {\n      item.addEventListener('click', function (event) {\n        event.preventDefault();\n        var blockID = item.getAttribute('href').substr(1);\n        document.getElementById(blockID).scrollIntoView({\n          behavior: 'smooth',\n          block: 'start'\n        });\n      });\n    }\n  });\n  document.addEventListener('click', function (event) {\n    var target = event.target;\n\n    if (target.id === 'scrollImg') {\n      event.preventDefault();\n      var parent = target.parentNode;\n      var blockID = parent.getAttribute('href').substr(1);\n      document.getElementById(blockID).scrollIntoView({\n        behavior: 'smooth',\n        block: 'start'\n      });\n    }\n  });\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (smoothScroll);\n\n//# sourceURL=webpack://3D_Glo/./src/modules/smoothScroll.js?");
 
 /***/ }),
 
@@ -148,7 +148,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar toggleMenu = function toggleMenu() {\n  var menu = document.querySelector('menu');\n\n  function handlerMenu() {\n    menu.classList.toggle('active-menu');\n  }\n\n  document.addEventListener('click', function (event) {\n    var target = event.target;\n    if (target.closest('.menu')) handlerMenu();\n    if (target.closest('.close-btn')) handlerMenu();\n\n    if (target.closest('a[href*=\"#\"]')) {\n      if (target.attributes.href.textContent !== '#close') {\n        handlerMenu();\n      }\n    }\n\n    if (!target.closest('.active-menu') && !target.closest('.menu')) menu.classList.remove('active-menu');\n  });\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (toggleMenu);\n\n//# sourceURL=webpack://3D_Glo/./src/modules/toggleMenu.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nvar toggleMenu = function toggleMenu() {\n  var menu = document.querySelector('menu'),\n      menuBtn = document.querySelector('.menu');\n\n  function handlerMenu() {\n    menu.classList.toggle('active-menu');\n  }\n\n  menuBtn.addEventListener('click', handlerMenu);\n  menu.addEventListener('click', function (event) {\n    var target = event.target;\n    if (target.closest('.close-btn')) handlerMenu();\n\n    if (target.closest('a[href*=\"#\"]')) {\n      if (target.attributes.href.textContent !== '#close') {\n        handlerMenu();\n      }\n    }\n  });\n  document.addEventListener('click', function (event) {\n    var target = event.target;\n    if (!target.closest('.active-menu') && !target.closest('.menu')) menu.classList.remove('active-menu');\n  });\n};\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (toggleMenu);\n\n//# sourceURL=webpack://3D_Glo/./src/modules/toggleMenu.js?");
 
 /***/ }),
 
@@ -561,7 +561,7 @@ eval("var map = {\n\t\"./log\": \"./node_modules/webpack/hot/log.js\"\n};\n\n\nf
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("f1a62954c22d1d1d5a6e")
+/******/ 		__webpack_require__.h = () => ("0a37e6c8a72b00ac7207")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
