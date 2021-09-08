@@ -1,7 +1,7 @@
-'use strict';
-
-class SliderCarousel{
-	constructor({ main,
+/* eslint-disable indent */
+class SliderCarousel {
+	constructor({
+		main,
 		wrap,
 		next,
 		prev,
@@ -9,8 +9,8 @@ class SliderCarousel{
 		infinity = false,
 		position = 0,
 		responsive = []
-	}){
-		if(!main || !wrap) {
+	}) {
+		if (!main || !wrap) {
 			console.warn('slider-carousel: Необходимо передать 2 свойства main и wrap');
 		}
 		this.main = document.querySelector(main);
@@ -26,9 +26,9 @@ class SliderCarousel{
 			maxPosition: this.slides.length - this.slidesToShow
 		}
 		this.responsive = responsive;
-		}
+	}
 
-	init(){
+	init() {
 		this.addGloClass();
 		this.addStyle();
 
@@ -55,11 +55,11 @@ class SliderCarousel{
 	addStyle() {
 		let style = document.getElementById('sliderCarousel-style')
 
-		if(!style) {
+		if (!style) {
 			style = document.createElement('style');
-			style.id = 'sliderCarousel-style';	
+			style.id = 'sliderCarousel-style';
 		}
-			document.head.appendChild(style);
+		document.head.appendChild(style);
 		style.textContent = `
 			.glo-slider{
 				overflow: hidden !important;
@@ -84,9 +84,9 @@ class SliderCarousel{
 	prevSlider() {
 		if (this.options.infinity || this.options.position > 0) {
 			--this.options.position;
-			 if ( this.options.position < 0) {
-				 this.options.position = this.options.maxPosition;
-			 }
+			if (this.options.position < 0) {
+				this.options.position = this.options.maxPosition;
+			}
 			this.wrap.style.transform = `translateX(-${this.options.position * this.options.widthSlide}%)`;
 		}
 
@@ -109,7 +109,7 @@ class SliderCarousel{
 		this.prev.className = 'glo-slider__prev';
 		this.next.className = 'glo-slider__next';
 		// eslint-disable-next-line no-trailing-spaces
-		
+
 		this.main.appendChild(this.prev);
 		this.main.appendChild(this.next);
 
@@ -146,24 +146,24 @@ class SliderCarousel{
 		const allResponse = this.responsive.map(item => item.breakpoint);
 		const maxResponse = Math.max(...allResponse);
 
-		const checkResponse =() => {			
+		const checkResponse = () => {
 			const widthWindow = document.documentElement.clientWidth;
 
 			if (widthWindow < maxResponse) {
-				for ( let i = 0; i < allResponse.length; i++) {
+				for (let i = 0; i < allResponse.length; i++) {
 					if (widthWindow < allResponse[i]) {
 						this.slidesToShow = this.responsive[i].slidesToShow;
 						this.options.widthSlide = Math.floor(100 / this.slidesToShow);
 						this.addStyle();
 					}
 				}
-			}	else {
-						this.slidesToShow = slidestoShowDefault;
-						this.options.widthSlide = Math.floor(100 / this.slidesToShow);
-						this.addStyle();
-					}
+			} else {
+				this.slidesToShow = slidestoShowDefault;
+				this.options.widthSlide = Math.floor(100 / this.slidesToShow);
+				this.addStyle();
+			}
 		};
 		checkResponse();
-		window.addEventListener('resize', checkResponse );
+		window.addEventListener('resize', checkResponse);
 	}
 }
